@@ -8,4 +8,5 @@ class AppColors {
   static final fontbuttom = Color(0xFF000000B);
   static final borderButtom = Color(0xFFCDCDE9);
   static final formato = Color(0xFF85858E);
+  static final backgroudTema = Color(0xFF61A1C1);
 }

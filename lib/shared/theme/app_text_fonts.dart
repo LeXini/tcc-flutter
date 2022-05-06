@@ -13,4 +13,9 @@ class TextFonts {
     fontWeight: FontWeight.w600,
     color: AppColors.tema,
   );
+  static final product = GoogleFonts.lato(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: AppColors.appBar,
+  );
 }

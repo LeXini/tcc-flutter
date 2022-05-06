@@ -30,6 +30,7 @@ class _MeusRegistros extends State<MeusRegistros> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroudTema,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

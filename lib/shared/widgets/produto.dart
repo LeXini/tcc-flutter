@@ -34,15 +34,15 @@ class _ProdutoState extends State<Produto> {
                 ),
                 Text.rich(TextSpan(
                   text: "Dados do Produto\n",
-                  style: TextFonts.principal,
+                  style: TextFonts.product,
                   children: [
                     TextSpan(
                       text: "Produto: Teste\n",
-                      style: TextFonts.principal,
+                      style: TextFonts.product,
                     ),
                     TextSpan(
                       text: "Preço: 20,00",
-                      style: TextFonts.principal,
+                      style: TextFonts.product,
                     ),
                   ],
                 ))
