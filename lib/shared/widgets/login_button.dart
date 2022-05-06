@@ -9,49 +9,56 @@ class LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //praticamente mesmo código do botão visto no curso, tentar mudar
     return InkWell(
       onTap: onTap,
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-          color: AppColors.buttom,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.fromBorderSide(
-            BorderSide(color: AppColors.buttom),
-          ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(AppImages.google),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Container(
-                    height: 56,
-                    width: 1,
-                    color: AppColors.buttom,
-                  ),
-                ],
-              ),
+      child: Center(
+        child: Container(
+          height: 56,
+          width: 230,
+          decoration: BoxDecoration(
+            color: AppColors.buttom,
+            borderRadius: BorderRadius.circular(5),
+            border: Border.fromBorderSide(
+              BorderSide(color: AppColors.borderButtom),
             ),
-            Expanded(
-              flex: 4,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Entrar",
-                    style: TextFonts.principal,
-                  ),
-                ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      AppImages.google,
+                      height: 30,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Container(
+                      height: 38,
+                      width: 2,
+                      color: AppColors.borderButtom,
+                    ),
+                  ],
+                ),
               ),
-            )
-          ],
+              Expanded(
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Entrar",
+                      style: TextFonts.principal,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
