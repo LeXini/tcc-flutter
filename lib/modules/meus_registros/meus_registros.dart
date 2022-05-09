@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
-import 'package:tcc/shared/widgets/produto.dart';
+import 'package:tcc/shared/widgets/cadastro/cadastro.dart';
+import 'package:tcc/shared/widgets/produto/produto.dart';
 
 class MeusRegistros extends StatefulWidget {
   const MeusRegistros({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class _MeusRegistros extends State<MeusRegistros> {
       'Index 0: Home',
       style: optionStyle,
     ),
+    SizedBox(child: Cadastro()),
     SizedBox(child: Produto()),
   ];
 
@@ -39,6 +41,10 @@ class _MeusRegistros extends State<MeusRegistros> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Cadastrar Produto',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.layers),

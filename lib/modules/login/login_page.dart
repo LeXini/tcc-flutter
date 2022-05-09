@@ -3,7 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tcc/modules/meus_registros/meus_registros.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
 import 'package:tcc/shared/theme/app_images.dart';
-import 'package:tcc/shared/widgets/login_button.dart';
+import 'package:tcc/shared/widgets/login_button/login_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -43,12 +43,10 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.only(left: 40, right: 40, top: 450),
               child: LoginButton(
                 onTap: () async {
-                  print("inicio da clicada");
                   await _googleSignIn.signIn();
                   setState(() {});
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => MeusRegistros()));
-                  print("fim da clicada");
                 },
               ),
             ),
