@@ -1,5 +1,6 @@
 import 'package:animated_card/animated_card.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
 import 'package:tcc/shared/theme/app_images.dart';
 import 'package:tcc/shared/theme/app_text_fonts.dart';
@@ -17,20 +18,34 @@ class _ProdutoState extends State<Produto> {
     return AnimatedCard(
       direction: AnimatedCardDirection.right,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.only(
+          top: 15,
+          left: 10,
+          right: 10,
+          bottom: 500,
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.tema,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(1),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 20.0,
+                ),
                 Image.asset(
                   AppImages.google,
                   width: 60,
+                ),
+                SizedBox(
+                  height: 20.0,
                 ),
                 Text.rich(TextSpan(
                   text: "Dados do Produto\n",

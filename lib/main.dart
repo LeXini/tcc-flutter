@@ -4,7 +4,9 @@ import 'package:tcc/app_widget.dart';
 import 'modules/login/login_page.dart';
 import 'modules/meus_registros/meus_registros.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(AppFirebase());
 }
 

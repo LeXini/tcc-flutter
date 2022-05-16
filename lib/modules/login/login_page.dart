@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tcc/modules/meus_registros/meus_registros.dart';
@@ -21,9 +24,6 @@ class _LoginPageState extends State<LoginPage> {
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login: ' + (user == null ? 'out' : 'in')),
-      ),
       body: Container(
         color: AppColors.tema,
         width: size.width,
@@ -43,10 +43,14 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.only(left: 40, right: 40, top: 450),
               child: LoginButton(
                 onTap: () async {
-                  await _googleSignIn.signIn();
+                  await signInWithGoogle();
                   setState(() {});
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => MeusRegistros()));
+                  //print("usuario=" + userName);
+                  sleep(Duration(seconds: 5));
+                  Navigator.pushReplacementNamed(context, "/registros");
+                  // Navigator.of(context).pushReplacement(
+                  //     MaterialPageRoute(builder: (context) => MeusRegistros())
+                  //     );
                 },
               ),
             ),
@@ -54,5 +58,23 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

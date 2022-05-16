@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tcc/modules/login/login_page.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
 import 'package:tcc/shared/widgets/cadastro/cadastro.dart';
 import 'package:tcc/shared/widgets/produto/produto.dart';
@@ -11,14 +13,12 @@ class MeusRegistros extends StatefulWidget {
 }
 
 class _MeusRegistros extends State<MeusRegistros> {
+  LoginPage usuario = new LoginPage();
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+    SizedBox(child: Produto()),
     SizedBox(child: Cadastro()),
     SizedBox(child: Produto()),
   ];
@@ -31,7 +31,24 @@ class _MeusRegistros extends State<MeusRegistros> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Olá, " + user.displayName!,
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(user.photoURL!),
+              backgroundColor: AppColors.appBar,
+            ),
+          )
+        ],
+        backgroundColor: AppColors.tema,
+      ),
       backgroundColor: AppColors.backgroudTema,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -39,8 +56,8 @@ class _MeusRegistros extends State<MeusRegistros> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.shopping_cart),
+            label: 'Produtos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
