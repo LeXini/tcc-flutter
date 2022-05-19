@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animated_card/animated_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,10 @@ class Cadastro extends StatefulWidget {
 class _CadastroState extends State<Cadastro> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   XFile? image;
+  String ref = '';
+  String url = '';
+  final controllerName = TextEditingController();
+  final controllerPreco = TextEditingController();
 
   Future<XFile?> getImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -26,7 +31,7 @@ class _CadastroState extends State<Cadastro> {
   Future<void> upload(String path) async {
     File file = File(path);
     try {
-      String ref = 'images/img-${DateTime.now().toString()}.jpg';
+      ref = 'images/img-${DateTime.now().toString()}.jpg';
       await storage.ref(ref).putFile(file);
     } on FirebaseException catch (e) {
       throw Exception('Erro no upload: ${e.code}');
@@ -34,12 +39,22 @@ class _CadastroState extends State<Cadastro> {
   }
 
   UploadImage() async {
-    XFile? file = image;
+    XFile? file = await image;
     if (file != null) {
       await upload(file.path);
+      url = await storage.ref(ref).getDownloadURL();
     } else {
       print("\nEle foi nulo");
     }
+  }
+
+  Future createProduto(User user) async {
+    final prod = FirebaseFirestore.instance.collection('produtos').doc();
+    user.id = prod.id;
+
+    final json = user.toJson();
+
+    await prod.set(json);
   }
 
   @override
@@ -52,6 +67,7 @@ class _CadastroState extends State<Cadastro> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              controller: controllerName,
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -65,7 +81,7 @@ class _CadastroState extends State<Cadastro> {
               height: 40.0,
             ),
             TextField(
-              keyboardType: TextInputType.name,
+              controller: controllerPreco,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -88,7 +104,15 @@ class _CadastroState extends State<Cadastro> {
             FloatingActionButton.extended(
               backgroundColor: AppColors.tema,
               foregroundColor: AppColors.fontbuttom,
-              onPressed: UploadImage,
+              onPressed: () async {
+                await UploadImage();
+                final user = User(
+                  name: controllerName.text,
+                  preco: controllerPreco.text,
+                  image: url,
+                );
+                createProduto(user);
+              },
               icon: Icon(Icons.add),
               label: Text('Cadastrar'),
             ),
@@ -97,4 +121,32 @@ class _CadastroState extends State<Cadastro> {
       ),
     );
   }
+}
+
+class User {
+  String id;
+  final String name;
+  final String preco;
+  final String image;
+
+  User({
+    this.id = '',
+    required this.name,
+    required this.preco,
+    required this.image,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'preco': preco,
+        'image': image,
+      };
+
+  static User fromJson(Map<String, dynamic> json) => User(
+        id: json['id'],
+        name: json['name'],
+        preco: json['preco'],
+        image: json['image'],
+      );
 }

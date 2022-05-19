@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tcc/modules/meus_registros/meus_registros.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
 import 'package:tcc/shared/theme/app_images.dart';
 import 'package:tcc/shared/widgets/login_button/login_button.dart';
@@ -46,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                   await signInWithGoogle();
                   setState(() {});
                   //print("usuario=" + userName);
-                  sleep(Duration(seconds: 5));
+                  sleep(Duration(seconds: 2));
                   Navigator.pushReplacementNamed(context, "/registros");
                   // Navigator.of(context).pushReplacement(
                   //     MaterialPageRoute(builder: (context) => MeusRegistros())
