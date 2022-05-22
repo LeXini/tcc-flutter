@@ -48,7 +48,7 @@ class _CadastroState extends State<Cadastro> {
     }
   }
 
-  Future createProduto(User user) async {
+  Future createProduto(Product user) async {
     final prod = FirebaseFirestore.instance.collection('produtos').doc();
     user.id = prod.id;
 
@@ -106,12 +106,12 @@ class _CadastroState extends State<Cadastro> {
               foregroundColor: AppColors.fontbuttom,
               onPressed: () async {
                 await UploadImage();
-                final user = User(
+                final product = Product(
                   name: controllerName.text,
                   preco: controllerPreco.text,
                   image: url,
                 );
-                createProduto(user);
+                createProduto(product);
               },
               icon: Icon(Icons.add),
               label: Text('Cadastrar'),
@@ -123,13 +123,13 @@ class _CadastroState extends State<Cadastro> {
   }
 }
 
-class User {
+class Product {
   String id;
   final String name;
   final String preco;
   final String image;
 
-  User({
+  Product({
     this.id = '',
     required this.name,
     required this.preco,
@@ -143,7 +143,7 @@ class User {
         'image': image,
       };
 
-  static User fromJson(Map<String, dynamic> json) => User(
+  static Product fromJson(Map<String, dynamic> json) => Product(
         id: json['id'],
         name: json['name'],
         preco: json['preco'],

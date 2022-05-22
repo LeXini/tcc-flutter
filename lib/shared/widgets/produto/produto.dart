@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
-import 'package:tcc/shared/theme/app_images.dart';
 import 'package:tcc/shared/theme/app_text_fonts.dart';
 import 'package:tcc/shared/widgets/cadastro/cadastro.dart';
 
@@ -24,7 +23,7 @@ class _ProdutoState extends State<Produto> {
   //       subtitle: Text(user.preco),
   //     );
 
-  Widget buildUser(User user) => AnimatedCard(
+  Widget buildUser(Product product) => AnimatedCard(
         direction: AnimatedCardDirection.right,
         child: Padding(
           padding: const EdgeInsets.only(
@@ -49,11 +48,7 @@ class _ProdutoState extends State<Produto> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  Image.network(user.image),
-                  // Image.asset(
-                  //   AppImages.google,
-                  //   width: 65,
-                  // ),
+                  Image.network(product.image),
                   SizedBox(
                     height: 20.0,
                   ),
@@ -63,11 +58,11 @@ class _ProdutoState extends State<Produto> {
                       style: TextFonts.product,
                       children: [
                         TextSpan(
-                          text: user.name,
+                          text: product.name,
                           style: TextFonts.product,
                         ),
                         TextSpan(
-                          text: '\nPreço: ${user.preco}',
+                          text: '\nPreço: ${product.preco}',
                           style: TextFonts.product,
                         ),
                       ],
@@ -83,16 +78,16 @@ class _ProdutoState extends State<Produto> {
         ),
       );
 
-  Stream<List<User>> readProds() => FirebaseFirestore.instance
+  Stream<List<Product>> readProds() => FirebaseFirestore.instance
       .collection('produtos')
       .snapshots()
       .map((snapshot) =>
-          snapshot.docs.map((doc) => User.fromJson(doc.data())).toList());
+          snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<List<User>>(
+      body: StreamBuilder<List<Product>>(
         stream: readProds(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
