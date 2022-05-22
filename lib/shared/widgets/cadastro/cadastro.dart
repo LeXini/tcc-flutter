@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:animated_card/animated_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,7 @@ class Cadastro extends StatefulWidget {
 
 class _CadastroState extends State<Cadastro> {
   final FirebaseStorage storage = FirebaseStorage.instance;
+  final user = FirebaseAuth.instance.currentUser!;
   XFile? image;
   String ref = '';
   String url = '';
@@ -107,6 +109,7 @@ class _CadastroState extends State<Cadastro> {
               onPressed: () async {
                 await UploadImage();
                 final product = Product(
+                  uid: user.uid,
                   name: controllerName.text,
                   preco: controllerPreco.text,
                   image: url,
@@ -125,12 +128,14 @@ class _CadastroState extends State<Cadastro> {
 
 class Product {
   String id;
+  final String uid;
   final String name;
   final String preco;
   final String image;
 
   Product({
     this.id = '',
+    required this.uid,
     required this.name,
     required this.preco,
     required this.image,
@@ -138,6 +143,7 @@ class Product {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'uid': uid,
         'name': name,
         'preco': preco,
         'image': image,
@@ -145,6 +151,7 @@ class Product {
 
   static Product fromJson(Map<String, dynamic> json) => Product(
         id: json['id'],
+        uid: json['uid'],
         name: json['name'],
         preco: json['preco'],
         image: json['image'],

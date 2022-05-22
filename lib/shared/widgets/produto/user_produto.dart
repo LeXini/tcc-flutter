@@ -7,14 +7,14 @@ import 'package:tcc/shared/theme/app_colors.dart';
 import 'package:tcc/shared/theme/app_text_fonts.dart';
 import 'package:tcc/shared/widgets/cadastro/cadastro.dart';
 
-class Produto extends StatefulWidget {
-  const Produto({Key? key}) : super(key: key);
+class ProdutoUsuario extends StatefulWidget {
+  const ProdutoUsuario({Key? key}) : super(key: key);
 
   @override
-  State<Produto> createState() => _ProdutoState();
+  State<ProdutoUsuario> createState() => _ProdutoState();
 }
 
-class _ProdutoState extends State<Produto> {
+class _ProdutoState extends State<ProdutoUsuario> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final user = FirebaseAuth.instance.currentUser!;
   // Widget buildUser(User user) => ListTile(
@@ -82,6 +82,7 @@ class _ProdutoState extends State<Produto> {
 
   Stream<List<Product>> readProds() => FirebaseFirestore.instance
       .collection('produtos')
+      .where('uid', isEqualTo: user.uid)
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
@@ -95,10 +96,9 @@ class _ProdutoState extends State<Produto> {
           if (snapshot.hasError) {
             return Text('Erro ${snapshot.error}');
           } else if (snapshot.hasData) {
-            final users = snapshot.data!;
-
+            final products = snapshot.data!;
             return ListView(
-              children: users.map(buildUser).toList(),
+              children: products.map(buildUser).toList(),
             );
           } else {
             return Center(child: CircularProgressIndicator());
@@ -106,59 +106,5 @@ class _ProdutoState extends State<Produto> {
         },
       ),
     );
-
-    // Widget build(BuildContext context) {
-    //   return AnimatedCard(
-    //     direction: AnimatedCardDirection.right,
-    //     child: Padding(
-    //       padding: const EdgeInsets.only(
-    //         top: 15,
-    //         left: 10,
-    //         right: 10,
-    //         bottom: 500,
-    //       ),
-    //       child: Container(
-    //         decoration: BoxDecoration(
-    //           color: AppColors.tema,
-    //           borderRadius: BorderRadius.circular(1),
-    //         ),
-    //         child: Padding(
-    //           padding: const EdgeInsets.only(
-    //             left: 10,
-    //             right: 10,
-    //           ),
-    //           child: Column(
-    //             crossAxisAlignment: CrossAxisAlignment.center,
-    //             children: [
-    //               SizedBox(
-    //                 height: 20.0,
-    //               ),
-    //               Image.asset(
-    //                 AppImages.google,
-    //                 width: 60,
-    //               ),
-    //               SizedBox(
-    //                 height: 20.0,
-    //               ),
-    //               Text.rich(TextSpan(
-    //                 text: "Dados do Produto\n",
-    //                 style: TextFonts.product,
-    //                 children: [
-    //                   TextSpan(
-    //                     text: "Produto: Teste\n",
-    //                     style: TextFonts.product,
-    //                   ),
-    //                   TextSpan(
-    //                     text: "Preço: 20,00",
-    //                     style: TextFonts.product,
-    //                   ),
-    //                 ],
-    //               ))
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   );
   }
 }

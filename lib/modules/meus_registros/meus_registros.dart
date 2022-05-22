@@ -4,6 +4,7 @@ import 'package:tcc/modules/login/login_page.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
 import 'package:tcc/shared/widgets/cadastro/cadastro.dart';
 import 'package:tcc/shared/widgets/produto/produto.dart';
+import 'package:tcc/shared/widgets/produto/user_produto.dart';
 
 class MeusRegistros extends StatefulWidget {
   const MeusRegistros({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _MeusRegistros extends State<MeusRegistros> {
   static const List<Widget> _widgetOptions = <Widget>[
     SizedBox(child: Produto()),
     SizedBox(child: Cadastro()),
-    SizedBox(child: Produto()),
+    SizedBox(child: ProdutoUsuario()),
   ];
 
   void _onItemTapped(int index) {
