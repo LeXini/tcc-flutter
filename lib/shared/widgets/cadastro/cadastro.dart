@@ -50,17 +50,19 @@ class _CadastroState extends State<Cadastro> {
     }
   }
 
-  Future createProduto(Product user) async {
+  Future createProduto(Product product) async {
     final prod = FirebaseFirestore.instance.collection('produtos').doc();
-    user.id = prod.id;
+    product.id = prod.id;
 
-    final json = user.toJson();
+    final json = product.toJson();
 
     await prod.set(json);
   }
 
   @override
   Widget build(BuildContext context) {
+    var form = GlobalKey<FormState>();
+
     return AnimatedCard(
       direction: AnimatedCardDirection.right,
       child: Padding(
@@ -68,60 +70,90 @@ class _CadastroState extends State<Cadastro> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: controllerName,
-              keyboardType: TextInputType.name,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(color: AppColors.formato),
-                ),
-                hintText: "Nome",
+            Form(
+              key: form,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: controllerName,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Este campo não pode ser salvo vazio';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(
+                      hintText: "Nome",
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40.0,
+                  ),
+                  TextFormField(
+                    controller: controllerPreco,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Este campo não pode ser salvo vazio';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      hintText: "Preço",
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40.0,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: getImage,
+                    icon: Icon(Icons.upload, size: 22),
+                    label: Text("Escolha uma imagem"),
+                  ),
+                  const SizedBox(
+                    height: 100.0,
+                  ),
+                  FloatingActionButton.extended(
+                    backgroundColor: AppColors.tema,
+                    foregroundColor: AppColors.fontbuttom,
+                    onPressed: () async {
+                      if (form.currentState!.validate()) {
+                        await UploadImage();
+                        final product = Product(
+                          uid: user.uid,
+                          name: controllerName.text,
+                          preco: controllerPreco.text,
+                          image: url,
+                        );
+                        createProduto(product);
+                        modalConfirm();
+                      }
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Cadastrar'),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 40.0,
-            ),
-            TextField(
-              controller: controllerPreco,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(color: AppColors.formato),
-                ),
-                hintText: "Preço",
-              ),
-            ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            ElevatedButton.icon(
-              onPressed: getImage,
-              icon: Icon(Icons.upload, size: 22),
-              label: Text("Escolha uma imagem"),
-            ),
-            const SizedBox(
-              height: 100.0,
-            ),
-            FloatingActionButton.extended(
-              backgroundColor: AppColors.tema,
-              foregroundColor: AppColors.fontbuttom,
-              onPressed: () async {
-                await UploadImage();
-                final product = Product(
-                  uid: user.uid,
-                  name: controllerName.text,
-                  preco: controllerPreco.text,
-                  image: url,
-                );
-                createProduto(product);
-              },
-              icon: Icon(Icons.add),
-              label: Text('Cadastrar'),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void modalConfirm() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text('Produto adicionado com sucesso'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("OK"),
+              ),
+            ]);
+      },
     );
   }
 }

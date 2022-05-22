@@ -17,22 +17,15 @@ class Produto extends StatefulWidget {
 class _ProdutoState extends State<Produto> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final user = FirebaseAuth.instance.currentUser!;
-  // Widget buildUser(User user) => ListTile(
-  //       leading: CircleAvatar(
-  //         child: Text(user.name),
-  //       ),
-  //       title: Text(user.name),
-  //       subtitle: Text(user.preco),
-  //     );
 
   Widget buildUser(Product product) => AnimatedCard(
         direction: AnimatedCardDirection.right,
         child: Padding(
           padding: const EdgeInsets.only(
-            top: 15,
+            top: 10,
             left: 100,
             right: 100,
-            bottom: 0,
+            bottom: 10,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -89,6 +82,7 @@ class _ProdutoState extends State<Produto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroudTema,
       body: StreamBuilder<List<Product>>(
         stream: readProds(),
         builder: (context, snapshot) {
