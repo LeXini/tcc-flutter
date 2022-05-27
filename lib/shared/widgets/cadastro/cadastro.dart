@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
 
@@ -18,6 +19,8 @@ class Cadastro extends StatefulWidget {
 class _CadastroState extends State<Cadastro> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final user = FirebaseAuth.instance.currentUser!;
+  double? latitude;
+  double? longitude;
   XFile? image;
   String ref = '';
   String url = '';
@@ -119,11 +122,14 @@ class _CadastroState extends State<Cadastro> {
                     onPressed: () async {
                       if (form.currentState!.validate()) {
                         await UploadImage();
+                        await getPosition();
                         final product = Product(
                           uid: user.uid,
                           name: controllerName.text,
                           preco: controllerPreco.text,
                           image: url,
+                          latitude: latitude,
+                          longitude: longitude,
                         );
                         createProduto(product);
                         modalConfirm();
@@ -156,6 +162,16 @@ class _CadastroState extends State<Cadastro> {
       },
     );
   }
+
+  getPosition() async {
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition();
+    setState(() {
+      latitude = position.latitude;
+      longitude = position.longitude;
+    });
+  }
 }
 
 class Product {
@@ -164,6 +180,8 @@ class Product {
   final String name;
   final String preco;
   final String image;
+  final double? latitude;
+  final double? longitude;
 
   Product({
     this.id = '',
@@ -171,6 +189,8 @@ class Product {
     required this.name,
     required this.preco,
     required this.image,
+    required this.latitude,
+    required this.longitude,
   });
 
   Map<String, dynamic> toJson() => {
@@ -179,6 +199,8 @@ class Product {
         'name': name,
         'preco': preco,
         'image': image,
+        'latitude': latitude,
+        'longitude': longitude,
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
@@ -187,5 +209,7 @@ class Product {
         name: json['name'],
         preco: json['preco'],
         image: json['image'],
+        latitude: json['latitude'],
+        longitude: json['longitude'],
       );
 }

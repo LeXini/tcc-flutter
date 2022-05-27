@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
+import 'package:tcc/shared/theme/app_images.dart';
 import 'package:tcc/shared/theme/app_text_fonts.dart';
 import 'package:tcc/shared/widgets/cadastro/cadastro.dart';
 
@@ -22,10 +24,10 @@ class _ProdutoState extends State<Produto> {
         direction: AnimatedCardDirection.right,
         child: Padding(
           padding: const EdgeInsets.only(
-            top: 10,
-            left: 100,
-            right: 100,
-            bottom: 10,
+            top: 2.5,
+            left: 2.5,
+            right: 2.5,
+            bottom: 2.5,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -43,9 +45,13 @@ class _ProdutoState extends State<Produto> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  Image.network(product.image),
+                  Image.network(
+                    product.image,
+                    height: 150,
+                    width: 150,
+                  ),
                   SizedBox(
-                    height: 20.0,
+                    height: 10.0,
                   ),
                   Text.rich(
                     TextSpan(
@@ -63,8 +69,15 @@ class _ProdutoState extends State<Produto> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 20.0,
+                  TextButton(
+                    onPressed: () {
+                      modalShow(product.image, product.name, product.preco,
+                          product.latitude, product.longitude);
+                    },
+                    child: Text(
+                      "\nVer dados do Produto",
+                      style: TextFonts.edit,
+                    ),
                   ),
                 ],
               ),
@@ -81,6 +94,8 @@ class _ProdutoState extends State<Produto> {
 
   @override
   Widget build(BuildContext context) {
+    double cardWidth = MediaQuery.of(context).size.width / 3.3;
+    double cardHeight = MediaQuery.of(context).size.height / 3.6;
     return Scaffold(
       backgroundColor: AppColors.backgroudTema,
       body: StreamBuilder<List<Product>>(
@@ -90,69 +105,122 @@ class _ProdutoState extends State<Produto> {
             return Text('Erro ${snapshot.error}');
           } else if (snapshot.hasData) {
             final users = snapshot.data!;
-
-            return ListView(
-              children: users.map(buildUser).toList(),
-            );
+            return GridView.count(
+                childAspectRatio: cardWidth / cardHeight,
+                crossAxisCount: 2,
+                children: users.map(buildUser).toList());
           } else {
             return Center(child: CircularProgressIndicator());
           }
         },
       ),
     );
+  }
 
-    // Widget build(BuildContext context) {
-    //   return AnimatedCard(
-    //     direction: AnimatedCardDirection.right,
-    //     child: Padding(
-    //       padding: const EdgeInsets.only(
-    //         top: 15,
-    //         left: 10,
-    //         right: 10,
-    //         bottom: 500,
-    //       ),
-    //       child: Container(
-    //         decoration: BoxDecoration(
-    //           color: AppColors.tema,
-    //           borderRadius: BorderRadius.circular(1),
-    //         ),
-    //         child: Padding(
-    //           padding: const EdgeInsets.only(
-    //             left: 10,
-    //             right: 10,
-    //           ),
-    //           child: Column(
-    //             crossAxisAlignment: CrossAxisAlignment.center,
-    //             children: [
-    //               SizedBox(
-    //                 height: 20.0,
-    //               ),
-    //               Image.asset(
-    //                 AppImages.google,
-    //                 width: 60,
-    //               ),
-    //               SizedBox(
-    //                 height: 20.0,
-    //               ),
-    //               Text.rich(TextSpan(
-    //                 text: "Dados do Produto\n",
-    //                 style: TextFonts.product,
-    //                 children: [
-    //                   TextSpan(
-    //                     text: "Produto: Teste\n",
-    //                     style: TextFonts.product,
-    //                   ),
-    //                   TextSpan(
-    //                     text: "Preço: 20,00",
-    //                     style: TextFonts.product,
-    //                   ),
-    //                 ],
-    //               ))
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   );
+  void modalShow(image, nome, preco, latitude, longitude) {
+    final _initialCameraPosition = CameraPosition(
+      target: LatLng(latitude, longitude),
+      zoom: 15,
+    );
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Column(
+                children: [
+                  Text(
+                    "Dados completos do produto\n",
+                    style: TextFonts.subtitle,
+                  ),
+                  Image.network(image),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '\n${nome}',
+                            style: TextFonts.principal,
+                          ),
+                          TextSpan(
+                            text: '\n\nPreço: ${preco}',
+                            style: TextFonts.principal,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      modalMap(nome, preco, latitude, longitude);
+                    },
+                    child: Text(
+                      "\nLocalização",
+                      style: TextFonts.subtitle,
+                    ),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    "OK",
+                    style: TextFonts.edit,
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void modalMap(nome, preco, latitude, longitude) async {
+    Set<Marker> _markers = {};
+    BitmapDescriptor mapMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), AppImages.icon);
+    setState(() {
+      _markers.add(
+        Marker(
+          markerId: MarkerId('id-1'),
+          position: LatLng(latitude, longitude),
+          icon: mapMarker,
+          infoWindow: InfoWindow(
+            title: nome.toString(),
+            snippet: preco.toString(),
+          ),
+        ),
+      );
+    });
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Container(
+            width: 500,
+            height: 400,
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(latitude, longitude),
+                zoom: 15,
+              ),
+              myLocationEnabled: true,
+              markers: _markers,
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                "OK",
+                style: TextFonts.edit,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
 import 'package:tcc/shared/theme/app_images.dart';
+import 'package:tcc/shared/theme/app_text_fonts.dart';
 import 'package:tcc/shared/widgets/login_button/login_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,10 +28,10 @@ class _LoginPageState extends State<LoginPage> {
         color: AppColors.tema,
         width: size.width,
         height: size.height,
-        child: Stack(
+        child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 160),
+              padding: const EdgeInsets.only(bottom: 120, top: 100),
               child: Center(
                 child: Image.asset(
                   AppImages.logo,
@@ -39,13 +40,45 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40, top: 450),
+              padding: const EdgeInsets.only(
+                left: 60,
+                right: 40,
+                top: 0,
+                bottom: 40,
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    "Sempre verifique se é permitido tirar fotos dos produtos no local!",
+                    style: TextFonts.principal,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: TextButton(
+                      onPressed: () {
+                        modalRegras();
+                      },
+                      child: Text(
+                        'Leia aqui algumas regras importantes',
+                        style: TextFonts.regras,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 40,
+                right: 40,
+                top: 30,
+                bottom: 10,
+              ),
               child: LoginButton(
                 onTap: () async {
                   await signInWithGoogle();
                   setState(() {});
-                  //print("usuario=" + userName);
-                  sleep(Duration(seconds: 2));
+                  //sleep(Duration(seconds: 2));
                   Navigator.pushReplacementNamed(context, "/registros");
                   // Navigator.of(context).pushReplacement(
                   //     MaterialPageRoute(builder: (context) => MeusRegistros())
@@ -75,5 +108,23 @@ class _LoginPageState extends State<LoginPage> {
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  void modalRegras() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+              'Este aplicativo tem o intuito de ajudar as pessoas a encontrar produtos mais baratos e que assim consigam localizar produtos mais em conta'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Entendi!"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

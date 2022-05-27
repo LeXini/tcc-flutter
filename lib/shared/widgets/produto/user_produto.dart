@@ -22,9 +22,10 @@ class _ProdutoState extends State<ProdutoUsuario> {
         direction: AnimatedCardDirection.right,
         child: Padding(
           padding: const EdgeInsets.only(
-            top: 10,
+            top: 7.5,
             left: 15,
             right: 15,
+            bottom: 7.5,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -108,6 +109,7 @@ class _ProdutoState extends State<ProdutoUsuario> {
             return Text('Erro ${snapshot.error}');
           } else if (snapshot.hasData) {
             final products = snapshot.data!;
+
             return ListView(
               children: products.map(buildUser).toList(),
             );
@@ -130,38 +132,38 @@ class _ProdutoState extends State<ProdutoUsuario> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Form(
-              key: form,
-              child: Container(
-                height: MediaQuery.of(context).size.height / 4,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: controllerName,
-                      decoration:
-                          (InputDecoration(hintText: 'Nome do produto')),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Este campo não pode ser salvo vazio';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: 40.0,
-                    ),
-                    TextFormField(
-                      controller: controllerPreco,
-                      decoration: (InputDecoration(hintText: 'Preço')),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Este campo não pode ser salvo vazio';
-                        }
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-              )),
+            key: form,
+            child: Container(
+              height: MediaQuery.of(context).size.height / 4,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: controllerName,
+                    decoration: (InputDecoration(hintText: 'Nome do produto')),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Este campo não pode ser salvo vazio';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  TextFormField(
+                    controller: controllerPreco,
+                    decoration: (InputDecoration(hintText: 'Preço')),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Este campo não pode ser salvo vazio';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
           actions: <Widget>[
             FlatButton(
               onPressed: () => Navigator.of(context).pop(),

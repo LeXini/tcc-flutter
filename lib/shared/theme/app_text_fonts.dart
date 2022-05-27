@@ -19,7 +19,7 @@ class TextFonts {
     color: AppColors.appBar,
   );
   static final edit = GoogleFonts.lato(
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: FontWeight.w400,
     color: AppColors.fontbuttom,
   );
@@ -27,5 +27,10 @@ class TextFonts {
     fontSize: 13,
     fontWeight: FontWeight.w400,
     color: AppColors.danger,
+  );
+  static final regras = GoogleFonts.lato(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.buttom,
   );
 }

@@ -41,7 +41,7 @@ class _MeusRegistros extends State<MeusRegistros> {
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 8),
+            padding: EdgeInsets.only(right: 20),
             child: CircleAvatar(
               backgroundImage: NetworkImage(user.photoURL!),
               backgroundColor: AppColors.appBar,
