@@ -24,69 +24,68 @@ class _LoginPageState extends State<LoginPage> {
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Container(
-        color: AppColors.tema,
-        width: size.width,
-        height: size.height,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 120, top: 100),
-              child: Center(
-                child: Image.asset(
-                  AppImages.logo,
-                  width: 350,
+      body: SingleChildScrollView(
+        child: Container(
+          color: AppColors.tema,
+          width: size.width,
+          height: size.height,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 120, top: 100),
+                child: Center(
+                  child: Image.asset(
+                    AppImages.logo,
+                    width: 350,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 60,
-                right: 40,
-                top: 0,
-                bottom: 40,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    "Sempre verifique se é permitido tirar fotos dos produtos no local!",
-                    style: TextFonts.principal,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 50),
-                    child: TextButton(
-                      onPressed: () {
-                        modalRegras();
-                      },
-                      child: Text(
-                        'Leia aqui algumas regras importantes',
-                        style: TextFonts.regras,
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 60,
+                  right: 40,
+                  top: 0,
+                  bottom: 40,
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      "Sempre verifique se é permitido tirar fotos dos produtos no local!",
+                      style: TextFonts.principal,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 50),
+                      child: TextButton(
+                        onPressed: () {
+                          modalRegras();
+                        },
+                        child: Text(
+                          'Leia aqui algumas regras importantes',
+                          style: TextFonts.regras,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 40,
-                right: 40,
-                top: 30,
-                bottom: 10,
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 40,
+                  right: 40,
+                  top: 30,
+                  bottom: 10,
+                ),
+                child: LoginButton(
+                  onTap: () async {
+                    await signInWithGoogle();
+                    setState(() {});
+                    //sleep(Duration(seconds: 2));
+                    Navigator.pushReplacementNamed(context, "/registros");
+                  },
+                ),
               ),
-              child: LoginButton(
-                onTap: () async {
-                  await signInWithGoogle();
-                  setState(() {});
-                  //sleep(Duration(seconds: 2));
-                  Navigator.pushReplacementNamed(context, "/registros");
-                  // Navigator.of(context).pushReplacement(
-                  //     MaterialPageRoute(builder: (context) => MeusRegistros())
-                  //     );
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

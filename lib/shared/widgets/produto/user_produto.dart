@@ -126,6 +126,7 @@ class _ProdutoState extends State<ProdutoUsuario> {
 
     final controllerName = TextEditingController();
     final controllerPreco = TextEditingController();
+    final controllerEstabelecimento = TextEditingController();
 
     showDialog(
       context: context,
@@ -134,12 +135,16 @@ class _ProdutoState extends State<ProdutoUsuario> {
           content: Form(
             key: form,
             child: Container(
-              height: MediaQuery.of(context).size.height / 4,
+              height: MediaQuery.of(context).size.height / 2.6,
               child: Column(
                 children: <Widget>[
                   TextFormField(
                     controller: controllerName,
-                    decoration: (InputDecoration(hintText: 'Nome do produto')),
+                    keyboardType: TextInputType.name,
+                    maxLength: 20,
+                    decoration: InputDecoration(
+                      labelText: "Nome do Produto",
+                    ),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Este campo não pode ser salvo vazio';
@@ -152,7 +157,27 @@ class _ProdutoState extends State<ProdutoUsuario> {
                   ),
                   TextFormField(
                     controller: controllerPreco,
-                    decoration: (InputDecoration(hintText: 'Preço')),
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    decoration: InputDecoration(
+                      labelText: "Preço (R\$)",
+                      hintText: "99,99",
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Este campo não pode ser salvo vazio';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  TextFormField(
+                    controller: controllerEstabelecimento,
+                    keyboardType: TextInputType.name,
+                    maxLength: 30,
+                    decoration: (InputDecoration(hintText: 'Estabelecimento')),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Este campo não pode ser salvo vazio';

@@ -20,13 +20,14 @@ class _ProdutoState extends State<Produto> {
   final FirebaseStorage storage = FirebaseStorage.instance;
   final user = FirebaseAuth.instance.currentUser!;
 
+  String searchText = '';
+
   Widget buildUser(Product product) => AnimatedCard(
         direction: AnimatedCardDirection.right,
         child: Padding(
           padding: const EdgeInsets.only(
             top: 2.5,
-            left: 2.5,
-            right: 2.5,
+            left: 8,
             bottom: 2.5,
           ),
           child: Container(
@@ -63,7 +64,7 @@ class _ProdutoState extends State<Produto> {
                           style: TextFonts.product,
                         ),
                         TextSpan(
-                          text: '\nPreço: ${product.preco}',
+                          text: '\nPreço: R\$${product.preco}',
                           style: TextFonts.product,
                         ),
                       ],
@@ -71,8 +72,14 @@ class _ProdutoState extends State<Produto> {
                   ),
                   TextButton(
                     onPressed: () {
-                      modalShow(product.image, product.name, product.preco,
-                          product.latitude, product.longitude);
+                      modalShow(
+                        product.image,
+                        product.name,
+                        product.preco,
+                        product.latitude,
+                        product.longitude,
+                        product.estabelecimento,
+                      );
                     },
                     child: Text(
                       "\nVer dados do Produto",
@@ -86,20 +93,37 @@ class _ProdutoState extends State<Produto> {
         ),
       );
 
-  Stream<List<Product>> readProds() => FirebaseFirestore.instance
+  Stream<List<Product>> readProds(searchText) => FirebaseFirestore.instance
       .collection('produtos')
+      .where(("search"), isGreaterThanOrEqualTo: searchText)
+      .where(("search"), isLessThan: (searchText + 'z'))
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList());
 
   @override
   Widget build(BuildContext context) {
-    double cardWidth = MediaQuery.of(context).size.width / 3.3;
-    double cardHeight = MediaQuery.of(context).size.height / 3.6;
+    double cardWidth = MediaQuery.of(context).size.width / 4;
+    double cardHeight = MediaQuery.of(context).size.height / 5.2;
     return Scaffold(
+      appBar: AppBar(
+        title: Card(
+          child: TextField(
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Busca',
+            ),
+            onChanged: (val) {
+              setState(() {
+                searchText = val.toLowerCase();
+              });
+            },
+          ),
+        ),
+      ),
       backgroundColor: AppColors.backgroudTema,
       body: StreamBuilder<List<Product>>(
-        stream: readProds(),
+        stream: readProds(searchText),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Erro ${snapshot.error}');
@@ -117,7 +141,7 @@ class _ProdutoState extends State<Produto> {
     );
   }
 
-  void modalShow(image, nome, preco, latitude, longitude) {
+  void modalShow(image, nome, preco, latitude, longitude, estabelecimento) {
     final _initialCameraPosition = CameraPosition(
       target: LatLng(latitude, longitude),
       zoom: 15,
@@ -128,27 +152,29 @@ class _ProdutoState extends State<Produto> {
           return SingleChildScrollView(
             child: AlertDialog(
               title: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Dados completos do produto\n",
                     style: TextFonts.subtitle,
                   ),
                   Image.network(image),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 50),
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '\n${nome}',
-                            style: TextFonts.principal,
-                          ),
-                          TextSpan(
-                            text: '\n\nPreço: ${preco}',
-                            style: TextFonts.principal,
-                          ),
-                        ],
-                      ),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '\n${nome}',
+                          style: TextFonts.principal,
+                        ),
+                        TextSpan(
+                          text: '\n\nPreço: R\$${preco}',
+                          style: TextFonts.principal,
+                        ),
+                        TextSpan(
+                          text: '\n\Estabelecimento: ${estabelecimento}',
+                          style: TextFonts.principal,
+                        ),
+                      ],
                     ),
                   ),
                   TextButton(
@@ -214,7 +240,7 @@ class _ProdutoState extends State<Produto> {
             FlatButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                "OK",
+                "Voltar",
                 style: TextFonts.edit,
               ),
             ),
