@@ -58,13 +58,18 @@ class _ProdutoState extends State<ProdutoUsuario> {
                             text: '\n\nPreço: ${product.preco}',
                             style: TextFonts.product,
                           ),
+                          TextSpan(
+                            text:
+                                '\n\nEstabelecimento: \n${product.estabelecimento}',
+                            style: TextFonts.product,
+                          ),
                         ],
                       ),
                     ),
                     TextButton(
                       onPressed: () {
-                        modalEdit(
-                            context, product.id, product.name, product.preco);
+                        modalEdit(context, product.id, product.name,
+                            product.preco, product.estabelecimento);
                       },
                       child: Text(
                         "\nEditar dados do produto",
@@ -121,12 +126,13 @@ class _ProdutoState extends State<ProdutoUsuario> {
     );
   }
 
-  modalEdit(BuildContext context, id, name, preco) {
+  modalEdit(BuildContext context, id, name, preco, estabelecimento) {
     var form = GlobalKey<FormState>();
 
-    final controllerName = TextEditingController();
-    final controllerPreco = TextEditingController();
-    final controllerEstabelecimento = TextEditingController();
+    final controllerName = TextEditingController(text: name);
+    final controllerPreco = TextEditingController(text: preco);
+    final controllerEstabelecimento =
+        TextEditingController(text: estabelecimento);
 
     showDialog(
       context: context,
@@ -203,6 +209,7 @@ class _ProdutoState extends State<ProdutoUsuario> {
                       .update({
                     'name': controllerName.text,
                     'preco': controllerPreco.text,
+                    'estabelecimento': controllerEstabelecimento.text,
                   });
 
                   Navigator.of(context).pop();
