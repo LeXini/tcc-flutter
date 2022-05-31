@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,12 +33,28 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 120, top: 100),
+                padding: const EdgeInsets.only(bottom: 40, top: 100),
                 child: Center(
                   child: Image.asset(
                     AppImages.logo,
                     width: 350,
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 40,
+                  right: 40,
+                  top: 30,
+                  bottom: 40,
+                ),
+                child: LoginButton(
+                  onTap: () async {
+                    await signInWithGoogle();
+                    setState(() {});
+                    //sleep(Duration(seconds: 2));
+                    Navigator.pushReplacementNamed(context, "/registros");
+                  },
                 ),
               ),
               Padding(
@@ -66,22 +83,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 40,
-                  right: 40,
-                  top: 30,
-                  bottom: 10,
-                ),
-                child: LoginButton(
-                  onTap: () async {
-                    await signInWithGoogle();
-                    setState(() {});
-                    //sleep(Duration(seconds: 2));
-                    Navigator.pushReplacementNamed(context, "/registros");
-                  },
                 ),
               ),
             ],

@@ -13,52 +13,40 @@ class LoginButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Center(
-        child: Container(
-          height: 56,
-          width: 230,
-          decoration: BoxDecoration(
-            color: AppColors.buttom,
-            borderRadius: BorderRadius.circular(5),
-            border: Border.fromBorderSide(
-              BorderSide(color: AppColors.borderButtom),
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 56,
+              width: 130,
+              decoration: BoxDecoration(
+                color: AppColors.buttom,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.fromBorderSide(
+                  BorderSide(color: AppColors.borderButtom),
+                ),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        AppImages.google,
+                        height: 25,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Text(
+                          "Google",
+                          style: TextFonts.google,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      AppImages.google,
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: 6,
-                    ),
-                    Container(
-                      height: 38,
-                      width: 2,
-                      color: AppColors.borderButtom,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Entrar",
-                      style: TextFonts.principal,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );

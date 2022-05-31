@@ -33,4 +33,14 @@ class TextFonts {
     fontWeight: FontWeight.w400,
     color: AppColors.buttom,
   );
+  static final login = GoogleFonts.lato(
+    fontSize: 25,
+    fontWeight: FontWeight.w700,
+    color: AppColors.appBar,
+  );
+  static final google = GoogleFonts.roboto(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: AppColors.fontbuttom,
+  );
 }
