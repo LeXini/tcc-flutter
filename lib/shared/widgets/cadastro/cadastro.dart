@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tcc/shared/theme/app_colors.dart';
+import 'package:tcc/shared/theme/app_text_fonts.dart';
 
 class Cadastro extends StatefulWidget {
   const Cadastro({Key? key}) : super(key: key);
@@ -27,6 +28,7 @@ class _CadastroState extends State<Cadastro> {
   final controllerName = TextEditingController();
   final controllerPreco = TextEditingController();
   final controllerEstabelecimento = TextEditingController();
+  bool isLoading = false;
 
   Future<XFile?> getImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -79,101 +81,123 @@ class _CadastroState extends State<Cadastro> {
         direction: AnimatedCardDirection.right,
         child: Padding(
           padding: const EdgeInsets.all(30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Form(
-                key: form,
-                child: Column(
+          child: isLoading
+              ? Center(
+                  child: Column(
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      Text(
+                        "Cadastrando produto...",
+                        style: TextFonts.principal,
+                      )
+                    ],
+                  ),
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextFormField(
-                      controller: controllerName,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Este campo não pode ser salvo vazio';
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.name,
-                      maxLength: 20,
-                      decoration: InputDecoration(
-                        labelText: "Nome do Produto",
+                    Form(
+                      key: form,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: controllerName,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Este campo não pode ser salvo vazio';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.name,
+                            maxLength: 20,
+                            decoration: InputDecoration(
+                              labelText: "Nome do Produto",
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40.0,
+                          ),
+                          TextFormField(
+                            controller: controllerPreco,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Este campo não pode ser salvo vazio';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.number,
+                            maxLength: 10,
+                            decoration: InputDecoration(
+                              labelText: "Preço (R\$)",
+                              hintText: "99,99",
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40.0,
+                          ),
+                          TextFormField(
+                            controller: controllerEstabelecimento,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Este campo não pode ser salvo vazio';
+                              }
+                              return null;
+                            },
+                            maxLength: 30,
+                            decoration: InputDecoration(
+                              labelText: "Nome do Estabelecimento",
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40.0,
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: modalImage,
+                            icon: Icon(Icons.upload, size: 22),
+                            label: Text("Escolha uma imagem"),
+                          ),
+                          const SizedBox(
+                            height: 100.0,
+                          ),
+                          FloatingActionButton.extended(
+                            backgroundColor: AppColors.tema,
+                            foregroundColor: AppColors.fontbuttom,
+                            onPressed: () async {
+                              if (form.currentState!.validate()) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                await UploadImage();
+                                await getPosition();
+                                final product = Product(
+                                  uid: user.uid,
+                                  name: controllerName.text,
+                                  search: controllerName.text.toLowerCase(),
+                                  preco: controllerPreco.text,
+                                  image: url,
+                                  latitude: latitude,
+                                  longitude: longitude,
+                                  estabelecimento:
+                                      controllerEstabelecimento.text,
+                                );
+                                createProduto(product);
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                modalConfirm();
+                              }
+                            },
+                            icon: Icon(Icons.add),
+                            label: Text('Cadastrar'),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 40.0,
-                    ),
-                    TextFormField(
-                      controller: controllerPreco,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Este campo não pode ser salvo vazio';
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                      decoration: InputDecoration(
-                        labelText: "Preço (R\$)",
-                        hintText: "99,99",
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 40.0,
-                    ),
-                    TextFormField(
-                      controller: controllerEstabelecimento,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Este campo não pode ser salvo vazio';
-                        }
-                        return null;
-                      },
-                      maxLength: 30,
-                      decoration: InputDecoration(
-                        labelText: "Nome do Estabelecimento",
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 40.0,
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: modalImage,
-                      icon: Icon(Icons.upload, size: 22),
-                      label: Text("Escolha uma imagem"),
-                    ),
-                    const SizedBox(
-                      height: 100.0,
-                    ),
-                    FloatingActionButton.extended(
-                      backgroundColor: AppColors.tema,
-                      foregroundColor: AppColors.fontbuttom,
-                      onPressed: () async {
-                        if (form.currentState!.validate()) {
-                          await UploadImage();
-                          await getPosition();
-                          final product = Product(
-                            uid: user.uid,
-                            name: controllerName.text,
-                            search: controllerName.text.toLowerCase(),
-                            preco: controllerPreco.text,
-                            image: url,
-                            latitude: latitude,
-                            longitude: longitude,
-                            estabelecimento: controllerEstabelecimento.text,
-                          );
-                          createProduto(product);
-                          modalConfirm();
-                        }
-                      },
-                      icon: Icon(Icons.add),
-                      label: Text('Cadastrar'),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );

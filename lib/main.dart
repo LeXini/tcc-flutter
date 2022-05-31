@@ -41,9 +41,5 @@ class _AppFirebaseState extends State<AppFirebase> {
             );
           }
         });
-    // theme: ThemeData(
-    //   primarySwatch: Colors.blue,
-    // ),
-    // home: const LoginPage(),
   }
 }

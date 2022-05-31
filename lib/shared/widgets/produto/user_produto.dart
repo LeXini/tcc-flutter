@@ -68,8 +68,13 @@ class _ProdutoState extends State<ProdutoUsuario> {
                     ),
                     TextButton(
                       onPressed: () {
-                        modalEdit(context, product.id, product.name,
-                            product.preco, product.estabelecimento);
+                        modalEdit(
+                            context,
+                            product.id,
+                            product.name,
+                            product.preco,
+                            product.estabelecimento,
+                            product.search);
                       },
                       child: Text(
                         "\nEditar dados do produto",
@@ -126,7 +131,7 @@ class _ProdutoState extends State<ProdutoUsuario> {
     );
   }
 
-  modalEdit(BuildContext context, id, name, preco, estabelecimento) {
+  modalEdit(BuildContext context, id, name, preco, estabelecimento, search) {
     var form = GlobalKey<FormState>();
 
     final controllerName = TextEditingController(text: name);
@@ -208,6 +213,7 @@ class _ProdutoState extends State<ProdutoUsuario> {
                       .doc(id)
                       .update({
                     'name': controllerName.text,
+                    'search': controllerName.text.toLowerCase(),
                     'preco': controllerPreco.text,
                     'estabelecimento': controllerEstabelecimento.text,
                   });
@@ -241,7 +247,6 @@ class _ProdutoState extends State<ProdutoUsuario> {
                     .collection('produtos')
                     .doc(id)
                     .delete();
-
                 Navigator.of(context).pop();
               },
               child: Text("SIM"),

@@ -10,4 +10,5 @@ class AppColors {
   static final formato = Color(0xFF85858E);
   static final backgroudTema = Color(0xFF61A1C1);
   static final danger = Color.fromARGB(255, 231, 21, 6);
+  static final disponivel = Color(0xFF32CD32);
 }
