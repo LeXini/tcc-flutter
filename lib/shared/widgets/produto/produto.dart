@@ -44,7 +44,7 @@ class _ProdutoState extends State<Produto> {
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.tema,
-                borderRadius: BorderRadius.circular(1),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -118,21 +118,24 @@ class _ProdutoState extends State<Produto> {
         ),
       ),
       backgroundColor: AppColors.backgroudTema,
-      body: StreamBuilder<List<Product>>(
-        stream: readProds(searchText),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Erro ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            final users = snapshot.data!;
-            return GridView.count(
-                childAspectRatio: cardWidth / cardHeight,
-                crossAxisCount: 2,
-                children: users.map(buildUser).toList());
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: StreamBuilder<List<Product>>(
+          stream: readProds(searchText),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Erro ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              final users = snapshot.data!;
+              return GridView.count(
+                  childAspectRatio: cardWidth / cardHeight,
+                  crossAxisCount: 2,
+                  children: users.map(buildUser).toList());
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
       ),
     );
   }
