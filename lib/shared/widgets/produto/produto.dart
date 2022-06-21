@@ -27,66 +27,62 @@ class _ProdutoState extends State<Produto> {
         child: Padding(
           padding: const EdgeInsets.only(
             top: 2.5,
-            left: 8,
+            left: 14,
             bottom: 2.5,
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.tema,
-              borderRadius: BorderRadius.circular(1),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
+          child: InkWell(
+            onTap: () {
+              modalShow(
+                product.image,
+                product.name,
+                product.preco,
+                product.latitude,
+                product.longitude,
+                product.estabelecimento,
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.tema,
+                borderRadius: BorderRadius.circular(1),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Image.network(
-                    product.image,
-                    height: 150,
-                    width: 150,
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text.rich(
-                    TextSpan(
-                      text: "Dados do Produto\n",
-                      style: TextFonts.product,
-                      children: [
-                        TextSpan(
-                          text: product.name,
-                          style: TextFonts.product,
-                        ),
-                        TextSpan(
-                          text: '\nPreço: R\$${product.preco}',
-                          style: TextFonts.product,
-                        ),
-                      ],
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 20.0,
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      modalShow(
-                        product.image,
-                        product.name,
-                        product.preco,
-                        product.latitude,
-                        product.longitude,
-                        product.estabelecimento,
-                      );
-                    },
-                    child: Text(
-                      "\nVer dados do Produto",
-                      style: TextFonts.edit,
+                    Image.network(
+                      product.image,
+                      height: 150,
+                      width: 150,
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        text: "Dados do Produto\n",
+                        style: TextFonts.product,
+                        children: [
+                          TextSpan(
+                            text: product.name,
+                            style: TextFonts.product,
+                          ),
+                          TextSpan(
+                            text: '\nPreço: R\$${product.preco}',
+                            style: TextFonts.product,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -104,7 +100,7 @@ class _ProdutoState extends State<Produto> {
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width / 4;
-    double cardHeight = MediaQuery.of(context).size.height / 5.2;
+    double cardHeight = MediaQuery.of(context).size.height / 5.6;
     return Scaffold(
       appBar: AppBar(
         title: Card(
@@ -155,7 +151,7 @@ class _ProdutoState extends State<Produto> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Dados completos do produto\n",
+                    "Dados do produto\n",
                     style: TextFonts.subtitle,
                   ),
                   Image.network(image),
@@ -167,11 +163,11 @@ class _ProdutoState extends State<Produto> {
                           style: TextFonts.principal,
                         ),
                         TextSpan(
-                          text: '\n\nPreço: R\$${preco}',
+                          text: '\nPreço: R\$${preco}',
                           style: TextFonts.principal,
                         ),
                         TextSpan(
-                          text: '\n\Estabelecimento: ${estabelecimento}',
+                          text: '\nEstabelecimento: ${estabelecimento}',
                           style: TextFonts.principal,
                         ),
                       ],
@@ -179,7 +175,8 @@ class _ProdutoState extends State<Produto> {
                   ),
                   TextButton(
                     onPressed: () {
-                      modalMap(nome, preco, latitude, longitude);
+                      modalMap(
+                          nome, estabelecimento, preco, latitude, longitude);
                     },
                     child: Text(
                       "\nLocalização",
@@ -202,19 +199,19 @@ class _ProdutoState extends State<Produto> {
         });
   }
 
-  void modalMap(nome, preco, latitude, longitude) async {
+  void modalMap(nome, estabelecimento, preco, latitude, longitude) async {
     Set<Marker> _markers = {};
-    BitmapDescriptor mapMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(), AppImages.icon);
+    //BitmapDescriptor mapMarker = await BitmapDescriptor.fromAssetImage(
+    //    ImageConfiguration(), AppImages.icon);
     setState(() {
       _markers.add(
         Marker(
           markerId: MarkerId('id-1'),
           position: LatLng(latitude, longitude),
-          icon: mapMarker,
+          //icon: mapMarker,
           infoWindow: InfoWindow(
-            title: nome.toString(),
-            snippet: preco.toString(),
+            title: estabelecimento.toString(),
+            snippet: nome.toString(),
           ),
         ),
       );

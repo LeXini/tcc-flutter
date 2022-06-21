@@ -170,6 +170,7 @@ class _CadastroState extends State<Cadastro> {
                                 setState(() {
                                   isLoading = true;
                                 });
+                                modalConfirm();
                                 await UploadImage();
                                 await getPosition();
                                 final product = Product(
@@ -187,6 +188,7 @@ class _CadastroState extends State<Cadastro> {
                                 setState(() {
                                   isLoading = false;
                                 });
+                                Navigator.of(context).pop();
                                 modalConfirm();
                               }
                             },
@@ -204,19 +206,42 @@ class _CadastroState extends State<Cadastro> {
   }
 
   void modalConfirm() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            title: Text('Produto adicionado com sucesso'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("OK"),
-              ),
-            ]);
-      },
-    );
+    if (isLoading == false) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text('Produto adicionado com sucesso'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text("OK"),
+                ),
+              ]);
+        },
+      );
+    } else if (isLoading == true) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Column(
+              children: <Widget>[
+                CircularProgressIndicator(),
+                const SizedBox(
+                  height: 30.0,
+                ),
+                Text(
+                  "Cadastrando produto...",
+                  style: TextFonts.principal,
+                )
+              ],
+            ),
+          );
+        },
+      );
+    }
   }
 
   void modalImage() {

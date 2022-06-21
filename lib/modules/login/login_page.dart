@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 40, top: 100),
+                padding: const EdgeInsets.only(bottom: 40, top: 60),
                 child: Center(
                   child: Image.asset(
                     AppImages.logo,
@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(
                   left: 40,
                   right: 40,
-                  top: 30,
+                  top: 15,
                   bottom: 40,
                 ),
                 child: LoginButton(
