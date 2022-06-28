@@ -146,7 +146,7 @@ class _CadastroState extends State<Cadastro> {
                               }
                               return null;
                             },
-                            maxLength: 30,
+                            maxLength: 20,
                             decoration: InputDecoration(
                               labelText: "Nome do Estabelecimento",
                             ),

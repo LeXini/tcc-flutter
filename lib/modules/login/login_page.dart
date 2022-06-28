@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-              'Este aplicativo tem o intuito de ajudar as pessoas a encontrar produtos mais baratos e que assim consigam localizar produtos mais em conta'),
+              'Este aplicativo tem o intuito de ajudar as pessoas a encontrar produtos mais baratos e que, assim, consigam localizar produtos de acordo com o que desejam gastar'),
           actions: <Widget>[
             FlatButton(
               onPressed: () => Navigator.of(context).pop(),
